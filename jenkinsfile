@@ -1,20 +1,60 @@
 pipeline {
-    agent any 
+    agent any
+
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['apply', 'destroy'],
+            description: 'Terraform action to perform'
+        )
+    }
+
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1' // Change as needed
+        AWS_CREDENTIALS = credentials('a9987070-29ae-40ea-bb11-0fa1d9b8ef53') // Replace with your Jenkins credentials ID
+    }
+
     stages {
-        stage('initialize') { 
+        stage('Checkout') {
             steps {
-               sh 'terraform init'
+                git url: 'https://github.com/harris-97/jenkins-terraform-test.git', branch: 'main'
             }
         }
-        stage('plan') { 
+
+        stage('Terraform Init') {
             steps {
-            sh 'terraform plan'
+                sh 'terraform init'
             }
         }
-        stage('Deploy') { 
+
+        stage('Terraform Plan') {
             steps {
-                sh 'terraform apply'
+                script {
+                    if (params.ACTION == 'apply') {
+                        sh 'terraform plan -out=tfplan'
+                    } else if (params.ACTION == 'destroy') {
+                        sh 'terraform plan -destroy -out=tfplan'
+                    }
+                }
             }
+        }
+
+        stage('Terraform Apply/Destroy') {
+            steps {
+                script {
+                    if (params.ACTION == 'apply') {
+                        sh 'terraform apply -auto-approve tfplan'
+                    } else if (params.ACTION == 'destroy') {
+                        sh 'terraform apply -auto-approve tfplan'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
