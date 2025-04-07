@@ -39,13 +39,13 @@ pipeline {
             }
         }
 
-        stage('Terraform Apply/Destroy') {
+        stage('Apply or Destroy') {
             steps {
                 script {
                     if (params.ACTION == 'apply') {
                         sh 'terraform apply -auto-approve tfplan'
-                    } else if (params.ACTION == 'destroy') {
-                        sh 'terraform apply -auto-approve tfplan'
+                    } else {
+                        sh 'terraform destroy -auto-approve'
                     }
                 }
             }
