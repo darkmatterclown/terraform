@@ -26,11 +26,6 @@ pipeline {
                 sh 'terraform init'
             }
         }
-        stage('Terraform state'){
-            steps {
-                sh 'terraform state list'
-                }
-        }
 
         stage('Terraform Plan') {
             steps {
