@@ -27,7 +27,7 @@ pipeline {
             }
         }
         stage('Terraform state'){
-            step{
+            step {
                 sh 'terraform state list'
                 }
         }
