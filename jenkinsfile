@@ -1,33 +1,28 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'ACTION',
-            choices: ['apply', 'destroy'],
-            description: 'Terraform action to perform'
-        )
+    environment {
+       AWS_CREDENTIALS_ID = credentials'3a67c1ca-d33b-41f7-be2a-d62a4383f107'  // Replace with actual AWS credential ID
     }
 
-    environment {
-        AWS_DEFAULT_REGION = 'us-east-1' // Change as needed
-        AWS_CREDENTIALS = credentials('5b02f6b1-4409-47b2-b143-9b535c4c7ac1') // Replace with your Jenkins credentials ID
+    parameters {
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Choose Terraform action')
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                git url: 'https://github.com/harris-97/jenkins-terraform-test.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/'
             }
         }
 
-        stage('Terraform Init') {
+        stage('Initialize Terraform') {
             steps {
                 sh 'terraform init'
             }
         }
 
-        stage('Terraform Plan') {
+        stage('Plan Terraform') {
             steps {
                 sh 'terraform plan -out=tfplan'
             }
@@ -43,12 +38,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }
