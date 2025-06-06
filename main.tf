@@ -13,6 +13,6 @@ provider "aws" {
 # Create IAM User
 
 resource "aws_iam_user" "terraform_user" {
-  name = "terraform-user"
+  name = "terraform"
 }
 
