@@ -44,13 +44,14 @@ pipeline {
                 }
             }
         }
-    }
-     stage('Terraform state'){
+        stage('Terraform state'){
             steps {
                 sh 'terraform state list'
                 }
         }
 
+    }
+     
 
     post {
         always {
