@@ -1,8 +1,8 @@
 pipeline {
-    agent label 'any'
+    agent  { label 'any'}
 
     environment {
-       AWS_CREDENTIALS_ID = credentials'394ca990-960f-42bd-b9e7-6af5a8dea834'  // Replace with actual AWS credential ID
+       AWS_CREDENTIALS_ID = credentials ('c6ad4006-55ba-4959-8221-e0c13cc79c21')  // Replace with actual AWS credential ID
     }
 
     parameters {
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git branch: 'main', url: 'https://github.com/harris-97/jenkins-terraform-test.git'
+                git branch: 'main', url: 'https://github.com/darkmatterclown/terraform.git'
             }
         }
 
